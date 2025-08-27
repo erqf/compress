@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="sr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compressor V9</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --accent: #a855f7; /* Glavna ljubičasta */
+            --glow: rgba(168, 85, 247, 0.5);
+            --bg-dark: #111111;
+            --bg-surface: #181818;
+            --border-color: rgba(168, 85, 247, 0.2);
+        }
+        body {
+            font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); color: #e0e0e0;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden;
+            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .logo-font { font-family: 'Orbitron', sans-serif; }
+        .main-card {
+            background: rgba(24, 24, 24, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        .hidden { display: none !important; }
+
+        .title-gradient {
+            background: linear-gradient(90deg, #ffffff, var(--accent));
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .main-button {
+            background-color: var(--accent); color: white; font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 15px var(--glow);
+        }
+        .main-button:hover:not(:disabled) {
+            box-shadow: 0 0 30px var(--glow); transform: translateY(-3px);
+            filter: brightness(1.1);
+        }
+        .main-button:disabled { background: #4b5563; color: #9ca3af; box-shadow: none; cursor: not-allowed; }
+        
+        #preloader { transition: opacity 0.5s ease-in-out, visibility 0.5s; }
+        #app-wrapper { transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; }
+
+        .screen { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="antialiased p-4">
+
+    <div id="preloader" class="fixed inset-0 bg-bg-dark flex items-center justify-center z-50">
+        <h1 class="text-4xl logo-font text-gray-400 animate-pulse">LOADING...</h1>
+    </div>
+
+    <div id="app-wrapper" class="w-full max-w-2xl opacity-0 transform translate-y-5">
+        <div class="main-card p-8 sm:p-10 rounded-2xl">
+            <div id="upload-box" class="screen">
+                <div class="text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-3 logo-font title-gradient">Fux deluxe</h1>
+                    <p class="text-gray-400 mb-8 text-lg">Smanji video koliko hoces xd.</p>
+                </div>
+                <div id="file-preview" class="hidden mb-6 text-left bg-black/20 p-4 rounded-lg border border-gray-700">
+                    <p class="font-bold text-white break-all" id="preview-filename"></p>
+                    <p class="text-sm text-gray-400" id="preview-filedetails"></p>
+                </div>
+                <div class="mb-4">
+                    <label for="size-input" class="block mb-2 text-sm font-medium text-gray-300">Ciljana Veličina (CM)</label>
+                    <input type="number" id="size-input" value="8" min="1" class="w-full bg-black/30 border border-gray-600/50 rounded-lg p-3 text-gray-200 text-lg focus:ring-2 focus:ring-accent focus:border-accent transition">
+                </div>
+                <button id="upload-btn" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl">
+                    <span id="button-content"><i class="fas fa-folder-open mr-3"></i>Izaberi Fajl...</span>
+                </button>
+                <input type="file" id="file-input" accept="video/*" hidden>
+            </div>
+
+            <div id="progress-box" class="hidden screen">
+                <div class="text-center"><h2 class="text-3xl font-bold logo-font text-white mb-3">Procesiranje...</h2>
+                <p id="status-message" class="text-gray-300 mb-8"></p>
+                <div class="w-full bg-black/30 rounded-full h-4 border border-gray-700">
+                    <div id="progress" class="bg-accent h-4 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                </div></div>
+            </div>
+
+            <div id="download-box" class="hidden screen text-center">
+                 <h2 class="text-3xl font-bold logo-font text-white mb-3">Brao</h2>
+                 <div class="my-6 text-left space-y-2 bg-black/20 p-4 rounded-lg border border-gray-700">
+                     <div class="flex justify-between"><span class="text-gray-400">Originalna veličina:</span><span id="original-size-span" class="font-bold text-white"></span></div>
+                     <div class="flex justify-between"><span class="text-gray-400">Nova veličina:</span><span id="new-size-span" class="font-bold text-accent"></span></div>
+                     <div class="flex justify-between"><span class="text-gray-400">Ušteda:</span><span id="reduction-span" class="font-bold text-white"></span></div>
+                 </div>
+                 <a href="#" id="download-link" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl" download><i class="fas fa-download mr-3"></i>Preuzmi Fajl</a>
+                 <button id="reset-btn" class="w-full mt-4 bg-gray-700/50 hover:bg-gray-700/80 text-gray-300 font-bold py-3 px-4 rounded-lg transition-colors">Kompresuj novi video</button>
+            </div>
+        </div>
+        <footer class="text-center mt-6"><p class="text-sm text-gray-500">&copy; 2025 Vladimir Vuckovic.</p></footer>
+    </div>
+    
+    <div id="notification-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="main-card p-6 rounded-lg shadow-xl text-center max-w-sm w-full"><p id="notification-message" class="text-lg mb-4"></p><button id="close-modal-button" class="bg-accent text-white font-bold py-2 px-6 rounded-lg">OK</button></div>
+    </div>
+    
+    <div id="drag-overlay" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-40 flex items-center justify-center text-center border-4 border-dashed border-accent">
+        <div><i class="fas fa-cloud-upload-alt text-8xl text-accent mb-4"></i><h1 class="text-5xl font-bold text-white">Pustite fajl da započnete</h1></div>
+    </div>
+
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        const socket = io();
+        const preloader = document.getElementById('preloader');
+        const appWrapper = document.getElementById('app-wrapper');
+        const mainCard = document.getElementById('main-card');
+        const uploadBox = document.getElementById('upload-box');
+        const progressBox = document.getElementById('progress-box');
+        const downloadBox = document.getElementById('download-box');
+        const uploadBtn = document.getElementById('upload-btn');
+        const uploadBtnContent = document.getElementById('button-content');
+        const fileInput = document.getElementById('file-input');
+        const sizeInput = document.getElementById('size-input');
+        const statusMessage = document.getElementById('status-message');
+        const progressBar = document.getElementById('progress');
+        const filePreview = document.getElementById('file-preview');
+        const previewFilename = document.getElementById('preview-filename');
+        const previewFiledetails = document.getElementById('preview-filedetails');
+        const downloadLink = document.getElementById('download-link');
+        const resetBtn = document.getElementById('reset-btn');
+        const notificationModal = document.getElementById('notification-modal');
+        const notificationMessage = document.getElementById('notification-message');
+        const closeModalButton = document.getElementById('close-modal-button');
+        const originalSizeSpan = document.getElementById('original-size-span');
+        const newSizeSpan = document.getElementById('new-size-span');
+        const reductionSpan = document.getElementById('reduction-span');
+        const dragOverlay = document.getElementById('drag-overlay');
+        let selectedFile = null;
+
+        // Novi Preloader
+        setTimeout(() => {
+            preloader.style.opacity = '0';
+            preloader.style.visibility = 'hidden';
+            appWrapper.style.opacity = '1';
+            appWrapper.style.transform = 'translateY(0)';
+        }, 2500); // Duže traje
+
+        // Event Listeners
+        uploadBtn.addEventListener('click', () => {
+            if (selectedFile) handleUpload(selectedFile);
+            else fileInput.click();
+        });
+        fileInput.addEventListener('change', (e) => handleFileSelection(e.target.files[0]));
+        resetBtn.addEventListener('click', resetUI);
+        closeModalButton.addEventListener('click', () => notificationModal.classList.add('hidden'));
+
+        // Full Screen Drag & Drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            document.body.addEventListener(eventName, e => e.preventDefault());
+        });
+        document.body.addEventListener('dragenter', () => dragOverlay.classList.remove('hidden'));
+        dragOverlay.addEventListener('dragleave', (e) => {
+            if (e.relatedTarget === null) dragOverlay.classList.add('hidden');
+        });
+        dragOverlay.addEventListener('drop', (e) => {
+            dragOverlay.classList.add('hidden');
+            if (e.dataTransfer.files.length > 0) handleFileSelection(e.dataTransfer.files[0]);
+        });
+
+        function showNotification(message) {
+            notificationMessage.textContent = message;
+            notificationModal.classList.remove('hidden');
+        }
+
+        function handleFileSelection(file) {
+            if (file) {
+                if (!file.type.startsWith('video/')) {
+                    return showNotification("Izabrani fajl nije video.");
+                }
+                selectedFile = file;
+                previewFilename.textContent = file.name;
+                previewFiledetails.textContent = `Veličina: ${formatBytes(file.size)}`;
+                filePreview.classList.remove('hidden');
+                uploadBtnContent.innerHTML = `<i class="fas fa-cogs mr-3"></i>Započni Kompresiju`;
+            }
+        }
+
+        function handleUpload(file) {
+            const targetSize = parseInt(sizeInput.value, 10);
+            if (isNaN(targetSize) || targetSize <= 0) {
+                return showNotification("Molimo unesite validnu ciljanu veličinu.");
+            }
+            uploadBtn.disabled = true;
+            uploadBtnContent.innerHTML = `<i class="fas fa-spinner fa-spin mr-3"></i>Slanje...`;
+            uploadBox.classList.add('hidden');
+            progressBox.classList.remove('hidden');
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('target_size', targetSize);
+            formData.append('sid', socket.id); // ISPRAVKA: Šaljemo SID serveru
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true);
+
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percent = (e.loaded / e.total) * 100;
+                    progressBar.style.width = `${percent}%`;
+                    statusMessage.textContent = `Upload u toku: ${Math.round(percent)}%`;
+                }
+            });
+
+            xhr.onload = () => {
+                if (xhr.status !== 200) {
+                    console.error("Server response:", xhr.responseText);
+                    showNotification(`Greška sa servera (Status: ${xhr.status}): ${xhr.responseText}`);
+                    resetUI();
+                }
+            };
+            xhr.onerror = () => { showNotification('Mrežna greška.'); resetUI(); };
+            xhr.send(formData);
+        }
+
+        socket.on('status_message', (data) => statusMessage.textContent = data.message);
+        socket.on('progress_update', (data) => progressBar.style.width = `${data.progress}%`);
+        socket.on('job_complete', (data) => {
+            progressBox.classList.add('hidden');
+            downloadBox.classList.remove('hidden');
+            downloadLink.href = data.download_url;
+            const { original_size, compressed_size } = data;
+            const reduction = 100 - (compressed_size / original_size * 100);
+            originalSizeSpan.textContent = formatBytes(original_size);
+            newSizeSpan.textContent = formatBytes(compressed_size);
+            reductionSpan.textContent = `${reduction.toFixed(1)}%`;
+        });
+        socket.on('job_error', (data) => { showNotification(`Greška: ${data.error}`); resetUI(); });
+
+        function resetUI() {
+            uploadBox.classList.remove('hidden');
+            progressBox.classList.add('hidden');
+            downloadBox.classList.add('hidden');
+            selectedFile = null;
+            uploadBtnContent.innerHTML = `<i class="fas fa-folder-open mr-3"></i>Izaberi Fajl...`;
+            uploadBtn.disabled = false;
+            filePreview.classList.add('hidden');
+            progressBar.style.width = '0%';
+            fileInput.value = '';
+        }
+
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 Bytes';
+            const k = 1024; const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+        }
+        
+    } catch(err) {
+        console.error("JavaScript greška:", err);
+    }
+});
+</script>
+</body>
+</html>
