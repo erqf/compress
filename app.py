@@ -8,7 +8,7 @@ import math
 print("--- app.py se pokreće (V9 Obsidian) ---")
 
 app = Flask(__name__)
-app.config['SECRET_key'] = 'finalna-tajna-za-localhost'
+app.config['SECRET_KEY'] = 'finalna-tajna-za-localhost'
 app.config['MAX_CONTENT_LENGTH'] = 1000 * 1024 * 1024
 socketio = SocketIO(app)
 
