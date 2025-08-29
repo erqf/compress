@@ -12,7 +12,7 @@ app = Flask(__name__)
 cloudinary.config( 
   cloud_name = "drlgdcfvn", 
   api_key = "972236491864889", 
-  api_secret = "**********" 
+  api_secret = "9pJnt6iw8f8BxfXi4WMWajAW-Pc" 
 )
 
 @app.route('/')
