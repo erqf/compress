@@ -25,7 +25,7 @@
         .main-card {
             background: rgba(24, 24, 24, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-color); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            height: 80vh; /* Smanjena visina */
+            height: 80vh;
             transition: all 0.5s ease-in-out;
         }
         .hidden { display: none !important; }
@@ -40,7 +40,8 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* === STILOVI ZA MUZIČKI PLEJER I ANIMACIJE === */
-        #main-content-container.compressor-view #music-player-wrapper { transform: translateX(150%); opacity: 0; pointer-events: none; }
+        #main-content-container.compressor-view #music-player-wrapper { transform: translateX(150%); opacity: 0; pointer-events: none; width: 0; }
+        #main-content-container.compressor-view { justify-content: center; }
         #main-content-container.compressor-view #compressor-wrapper { width: 100%; max-width: 42rem; /* Širina kao 'max-w-2xl' */ }
 
         #playlist-container::-webkit-scrollbar { width: 6px; }
@@ -50,9 +51,10 @@
         #playlist li:hover { background-color: rgba(255, 255, 255, 0.05); transform: translateX(5px); }
         #playlist .active { background-color: var(--accent) !important; color: white; font-weight: 600; transform: translateX(5px); }
         
-        input[type="range"] { -webkit-appearance: none; background: transparent; cursor: pointer; }
+        input[type="range"] { -webkit-appearance: none; background: transparent; cursor: pointer; padding: 0; }
         input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: rgba(255,255,255,0.1); border-radius: 5px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -5px; width: 16px; height: 16px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 5px var(--glow); }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -5px; width: 16px; height: 16px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 5px var(--glow); transition: transform 0.2s ease; }
+        input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.2); }
         #volume-slider { width: 100px; }
 
         .player-button { background: none; border: none; color: #e0e0e0; font-size: 1.5rem; cursor: pointer; transition: all 0.2s ease; }
@@ -70,19 +72,20 @@
     </div>
 
     <div id="main-content-wrapper" class="w-full max-w-6xl opacity-0 transform translate-y-5">
-        <div id="main-content-container" class="flex flex-col lg:flex-row items-start justify-center gap-8 w-full mx-auto transition-all duration-500 ease-in-out">
+        <div id="main-content-container" class="flex flex-col lg:flex-row items-start gap-8 w-full mx-auto transition-all duration-500 ease-in-out">
         
             <div id="compressor-wrapper" class="w-full lg:w-1/2 transition-all duration-500 ease-in-out">
                 <div class="main-card p-8 sm:p-10 rounded-2xl flex flex-col">
-                    <div id="upload-box" class="screen">
+                    <div id="upload-box" class="screen flex-grow flex flex-col">
                         <div class="text-center"><h1 class="text-4xl md:text-5xl font-bold mb-3 logo-font title-gradient">Fux Deluxe</h1><p class="text-gray-400 mb-8 text-lg">Kompresuj video na željenu veličinu.</p></div>
-                        <div id="file-preview" class="hidden mb-6 text-left bg-black/20 p-4 rounded-lg border border-gray-700"><p class="font-bold text-white break-all" id="preview-filename"></p><p class="text-sm text-gray-400" id="preview-filedetails"></p></div>
-                        <div class="mb-4"><label for="size-input" class="block mb-2 text-sm font-medium text-gray-300">Ciljana Veličina (MB)</label><input type="number" id="size-input" value="8" min="1" class="w-full bg-black/30 border border-gray-600/50 rounded-lg p-3 text-gray-200 text-lg focus:ring-2 focus:ring-accent focus:border-accent transition"></div>
-                        <button id="upload-btn" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl"><span id="button-content"><i class="fas fa-folder-open mr-3"></i>Izaberi Video...</span></button>
-                        <input type="file" id="file-input" accept="video/*" hidden>
+                        <div class="mt-auto">
+                            <div id="file-preview" class="hidden mb-6 text-left bg-black/20 p-4 rounded-lg border border-gray-700"><p class="font-bold text-white break-all" id="preview-filename"></p><p class="text-sm text-gray-400" id="preview-filedetails"></p></div>
+                            <div class="mb-4"><label for="size-input" class="block mb-2 text-sm font-medium text-gray-300">Ciljana Veličina (MB)</label><input type="number" id="size-input" value="8" min="1" class="w-full bg-black/30 border border-gray-600/50 rounded-lg p-3 text-gray-200 text-lg focus:ring-2 focus:ring-accent focus:border-accent transition"></div>
+                            <button id="upload-btn" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl"><span id="button-content"><i class="fas fa-folder-open mr-3"></i>Izaberi Video...</span></button>
+                            <input type="file" id="file-input" accept="video/*" hidden>
+                        </div>
                     </div>
-                    <div id="download-box" class="hidden screen text-center"><h2 class="text-3xl font-bold logo-font text-white mb-3">Spreman za Preuzimanje!</h2><p class="text-gray-300 mb-8">Video je optimizovan.</p><a href="#" id="download-link" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl" download><i class="fas fa-download mr-3"></i>Preuzmi Fajl</a><button id="reset-btn" class="w-full mt-4 bg-gray-700/50 hover:bg-gray-700/80 text-gray-300 font-bold py-3 px-4 rounded-lg transition-colors">Kompresuj novi</button></div>
-                    <footer class="text-center mt-auto pt-6"><p class="text-sm text-gray-500">&copy; 2025 Vladimir Vuckovic.</p></footer>
+                    <div id="download-box" class="hidden screen text-center m-auto"><h2 class="text-3xl font-bold logo-font text-white mb-3">Spreman za Preuzimanje!</h2><p class="text-gray-300 mb-8">Video je optimizovan.</p><a href="#" id="download-link" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl" download><i class="fas fa-download mr-3"></i>Preuzmi Fajl</a><button id="reset-btn" class="w-full mt-4 bg-gray-700/50 hover:bg-gray-700/80 text-gray-300 font-bold py-3 px-4 rounded-lg transition-colors">Kompresuj novi</button></div>
                 </div>
             </div>
 
@@ -90,10 +93,15 @@
                 <div class="main-card p-8 sm:p-10 rounded-2xl flex flex-col">
                     <h2 class="text-4xl font-bold mb-4 logo-font title-gradient">Music Player</h2>
                     <div id="playlist-container" class="flex-grow overflow-y-auto bg-black/20 p-4 rounded-lg border border-gray-700/50 mb-6"><ul id="playlist" class="space-y-2"><li class="text-gray-400">Učitavanje pesama...</li></ul></div>
+                    
                     <div class="player-controls mt-auto">
-                        <div id="now-playing" class="text-center text-lg font-semibold truncate mb-4 h-7">Izaberi pesmu</div>
-                        <div class="timeline-container flex items-center gap-3 text-sm text-gray-400 mb-2"><span id="current-time">0:00</span><input type="range" id="timeline" value="0" step="1"><span id="total-time">0:00</span></div>
-                        <div class="buttons flex justify-between items-center gap-4">
+                        <div id="now-playing" class="text-center text-lg font-semibold truncate mb-2 h-7">Izaberi pesmu</div>
+                        <input type="range" id="timeline" value="0" step="1" class="w-full my-2">
+                        <div class="flex justify-between text-xs text-gray-400 px-1">
+                            <span id="current-time">0:00</span>
+                            <span id="total-time">0:00</span>
+                        </div>
+                        <div class="buttons flex justify-between items-center gap-4 mt-3">
                             <button id="prev-btn" class="player-button"><i class="fas fa-backward-step"></i></button>
                             <button id="play-pause-btn" class="player-button text-4xl"><i class="fas fa-play"></i></button>
                             <button id="next-btn" class="player-button"><i class="fas fa-forward-step"></i></button>
@@ -103,6 +111,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -124,6 +133,11 @@
     </div>
     
     <button id="toggle-view-btn" class="fixed bottom-5 right-5 main-button rounded-full w-14 h-14 flex items-center justify-center z-40 text-xl"><i class="fas fa-compress"></i></button>
+    
+    <footer class="fixed bottom-4 left-1/2 -translate-x-1/2 text-sm text-gray-600 z-0">
+        <p>&copy; 2025 Vladimir Vuckovic.</p>
+    </footer>
+
     <audio id="audio-player"></audio>
 
 <script>
@@ -269,11 +283,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 timeline.value = currentTime;
                 const format = t => { const m=Math.floor(t/60), s=Math.floor(t%60); return `${m}:${s<10?'0':''}${s}`; };
                 currentTimeEl.textContent = format(currentTime);
-                totalTimeEl.textContent = format(duration);
                 miniTimeInfo.textContent = `${format(currentTime)} / ${format(duration)}`;
             }
         });
-        audioPlayer.addEventListener('loadedmetadata', () => { timeline.max = audioPlayer.duration; });
+        audioPlayer.addEventListener('loadedmetadata', () => { totalTimeEl.textContent = formatTime(audioPlayer.duration); timeline.max = audioPlayer.duration; const formatTime = t => { const m=Math.floor(t/60), s=Math.floor(t%60); return `${m}:${s<10?'0':''}${s}`; }; });
         timeline.addEventListener('input', () => { audioPlayer.currentTime = timeline.value; });
 
         volumeSlider.addEventListener('input', e => {
@@ -286,11 +299,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (audioPlayer.volume > 0) {
                 lastVolume = audioPlayer.volume;
                 audioPlayer.volume = 0;
-                volumeSlider.value = 0;
             } else {
                 audioPlayer.volume = lastVolume;
-                volumeSlider.value = lastVolume * 100;
             }
+            volumeSlider.value = audioPlayer.volume * 100;
             updateVolumeIcon(audioPlayer.volume);
         });
 
