@@ -25,135 +25,111 @@
         .main-card {
             background: rgba(24, 24, 24, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-color); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            height: 85vh;
+            height: 80vh; /* Smanjena visina */
+            transition: all 0.5s ease-in-out;
         }
         .hidden { display: none !important; }
-        .title-gradient {
-            background: linear-gradient(90deg, #ffffff, var(--accent));
-            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .main-button {
-            background-color: var(--accent); color: white; font-weight: 600;
-            transition: all 0.3s ease-in-out; box-shadow: 0 0 15px var(--glow);
-        }
-        .main-button:hover:not(:disabled) {
-            box-shadow: 0 0 30px var(--glow); transform: translateY(-3px); filter: brightness(1.1);
-        }
+        .title-gradient { background: linear-gradient(90deg, #ffffff, var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .main-button { background-color: var(--accent); color: white; font-weight: 600; transition: all 0.3s ease-in-out; box-shadow: 0 0 15px var(--glow); }
+        .main-button:hover:not(:disabled) { box-shadow: 0 0 30px var(--glow); transform: translateY(-3px); filter: brightness(1.1); }
         .main-button:disabled { background: #4b5563; color: #9ca3af; box-shadow: none; cursor: not-allowed; }
         
-        /* PRELOADER STIL */
         #preloader { transition: opacity 0.8s ease-in-out, visibility 0.8s; }
-        #main-content-wrapper { transition: opacity 0.8s ease-in-out; }
-        #preloader h1 { color: #b08cd4; animation: pulse-text 2s infinite alternate; }
-        #preloader h1 span { opacity: 0; animation: loading-dots-new 1.8s infinite; }
-        #preloader h1 span:nth-child(1) { animation-delay: 0.0s; }
-        #preloader h1 span:nth-child(2) { animation-delay: 0.2s; }
-        #preloader h1 span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes loading-dots-new { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
-        @keyframes pulse-text { from { text-shadow: 0 0 5px var(--glow); } to { text-shadow: 0 0 15px var(--glow); } }
+        #main-content-wrapper { transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out; }
         .screen { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* === DODATI STILOVI ZA MUZIČKI PLEJER === */
-        #playlist-container { scrollbar-color: var(--accent) var(--bg-surface); scrollbar-width: thin; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* === STILOVI ZA MUZIČKI PLEJER I ANIMACIJE === */
+        #main-content-container.compressor-view #music-player-wrapper { transform: translateX(150%); opacity: 0; pointer-events: none; }
+        #main-content-container.compressor-view #compressor-wrapper { width: 100%; max-width: 42rem; /* Širina kao 'max-w-2xl' */ }
+
         #playlist-container::-webkit-scrollbar { width: 6px; }
         #playlist-container::-webkit-scrollbar-track { background: transparent; }
-        #playlist-container::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 10px; border: 3px solid transparent; }
-        #playlist .active { background-color: var(--accent) !important; color: white; font-weight: 600; }
+        #playlist-container::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 10px; }
+        #playlist li { transition: all 0.2s ease-out; }
+        #playlist li:hover { background-color: rgba(255, 255, 255, 0.05); transform: translateX(5px); }
+        #playlist .active { background-color: var(--accent) !important; color: white; font-weight: 600; transform: translateX(5px); }
         
-        #timeline { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 5px; outline: none; transition: opacity .2s; }
-        #timeline::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; background: var(--accent); cursor: pointer; border-radius: 50%; box-shadow: 0 0 5px var(--glow); }
-        #timeline::-moz-range-thumb { width: 16px; height: 16px; background: var(--accent); cursor: pointer; border-radius: 50%; }
+        input[type="range"] { -webkit-appearance: none; background: transparent; cursor: pointer; }
+        input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: rgba(255,255,255,0.1); border-radius: 5px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -5px; width: 16px; height: 16px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 5px var(--glow); }
+        #volume-slider { width: 100px; }
 
         .player-button { background: none; border: none; color: #e0e0e0; font-size: 1.5rem; cursor: pointer; transition: all 0.2s ease; }
         .player-button:hover { color: var(--accent); transform: scale(1.1); }
-        .player-button#play-pause-btn { font-size: 2.2rem; }
-
-        #main-content-container.hidden { opacity: 0; transform: scale(0.95); pointer-events: none; }
-        .mini-player.visible { display: flex; animation: fadeIn 0.3s ease; }
+        
+        .mini-player.visible { display: flex; animation: fadeIn 0.4s ease; }
+        @keyframes pulse-glow { 0%, 100% { text-shadow: 0 0 5px var(--glow); } 50% { text-shadow: 0 0 15px var(--glow); } }
+        .mini-player .playing-title { animation: pulse-glow 2s infinite ease-in-out; }
     </style>
 </head>
 <body class="antialiased p-4">
 
     <div id="preloader" class="fixed inset-0 bg-bg-dark flex items-center justify-center z-50">
-        <h1 class="text-4xl logo-font">LOADING<span>.</span><span>.</span><span>.</span></h1>
+        <h1 class="text-4xl logo-font">LOADING...</h1>
     </div>
 
-    <div id="main-content-wrapper" class="w-full max-w-7xl opacity-0">
-        <div id="main-content-container" class="flex flex-col lg:flex-row items-start justify-center gap-8 w-full mx-auto transition-all duration-500">
+    <div id="main-content-wrapper" class="w-full max-w-6xl opacity-0 transform translate-y-5">
+        <div id="main-content-container" class="flex flex-col lg:flex-row items-start justify-center gap-8 w-full mx-auto transition-all duration-500 ease-in-out">
         
-            <div id="compressor-wrapper" class="w-full lg:w-1/2">
+            <div id="compressor-wrapper" class="w-full lg:w-1/2 transition-all duration-500 ease-in-out">
                 <div class="main-card p-8 sm:p-10 rounded-2xl flex flex-col">
                     <div id="upload-box" class="screen">
-                        <div class="text-center">
-                            <h1 class="text-4xl md:text-5xl font-bold mb-3 logo-font title-gradient">Fux Deluxe</h1>
-                            <p class="text-gray-400 mb-8 text-lg">Kompresuj video na željenu veličinu.</p>
-                        </div>
-                        <div id="file-preview" class="hidden mb-6 text-left bg-black/20 p-4 rounded-lg border border-gray-700">
-                            <p class="font-bold text-white break-all" id="preview-filename"></p>
-                            <p class="text-sm text-gray-400" id="preview-filedetails"></p>
-                        </div>
-                        <div class="mb-4">
-                            <label for="size-input" class="block mb-2 text-sm font-medium text-gray-300">Ciljana Veličina (MB)</label>
-                            <input type="number" id="size-input" value="8" min="1" class="w-full bg-black/30 border border-gray-600/50 rounded-lg p-3 text-gray-200 text-lg focus:ring-2 focus:ring-accent focus:border-accent transition">
-                        </div>
-                        <button id="upload-btn" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl">
-                            <span id="button-content"><i class="fas fa-folder-open mr-3"></i>Izaberi Video...</span>
-                        </button>
+                        <div class="text-center"><h1 class="text-4xl md:text-5xl font-bold mb-3 logo-font title-gradient">Fux Deluxe</h1><p class="text-gray-400 mb-8 text-lg">Kompresuj video na željenu veličinu.</p></div>
+                        <div id="file-preview" class="hidden mb-6 text-left bg-black/20 p-4 rounded-lg border border-gray-700"><p class="font-bold text-white break-all" id="preview-filename"></p><p class="text-sm text-gray-400" id="preview-filedetails"></p></div>
+                        <div class="mb-4"><label for="size-input" class="block mb-2 text-sm font-medium text-gray-300">Ciljana Veličina (MB)</label><input type="number" id="size-input" value="8" min="1" class="w-full bg-black/30 border border-gray-600/50 rounded-lg p-3 text-gray-200 text-lg focus:ring-2 focus:ring-accent focus:border-accent transition"></div>
+                        <button id="upload-btn" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl"><span id="button-content"><i class="fas fa-folder-open mr-3"></i>Izaberi Video...</span></button>
                         <input type="file" id="file-input" accept="video/*" hidden>
                     </div>
-                    <div id="download-box" class="hidden screen text-center">
-                        <h2 class="text-3xl font-bold logo-font text-white mb-3">Spreman za Preuzimanje!</h2>
-                        <p class="text-gray-300 mb-8">Video je optimizovan na Cloud serverima.</p>
-                        <a href="#" id="download-link" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl" download="kompresovan-video.mp4"><i class="fas fa-download mr-3"></i>Preuzmi Fajl</a>
-                        <button id="reset-btn" class="w-full mt-4 bg-gray-700/50 hover:bg-gray-700/80 text-gray-300 font-bold py-3 px-4 rounded-lg transition-colors">Kompresuj novi</button>
-                    </div>
+                    <div id="download-box" class="hidden screen text-center"><h2 class="text-3xl font-bold logo-font text-white mb-3">Spreman za Preuzimanje!</h2><p class="text-gray-300 mb-8">Video je optimizovan.</p><a href="#" id="download-link" class="main-button w-full font-bold py-4 px-4 rounded-lg flex items-center justify-center text-xl" download><i class="fas fa-download mr-3"></i>Preuzmi Fajl</a><button id="reset-btn" class="w-full mt-4 bg-gray-700/50 hover:bg-gray-700/80 text-gray-300 font-bold py-3 px-4 rounded-lg transition-colors">Kompresuj novi</button></div>
                     <footer class="text-center mt-auto pt-6"><p class="text-sm text-gray-500">&copy; 2025 Vladimir Vuckovic.</p></footer>
                 </div>
             </div>
 
-            <div id="music-player-wrapper" class="w-full lg:w-1/2">
+            <div id="music-player-wrapper" class="w-full lg:w-1/2 transition-all duration-500 ease-in-out">
                 <div class="main-card p-8 sm:p-10 rounded-2xl flex flex-col">
                     <h2 class="text-4xl font-bold mb-4 logo-font title-gradient">Music Player</h2>
-                    <div id="playlist-container" class="flex-grow overflow-y-auto bg-black/20 p-4 rounded-lg border border-gray-700/50 mb-6">
-                        <ul id="playlist" class="space-y-2">
-                            <li class="text-gray-400">Učitavanje pesama...</li>
-                        </ul>
-                    </div>
+                    <div id="playlist-container" class="flex-grow overflow-y-auto bg-black/20 p-4 rounded-lg border border-gray-700/50 mb-6"><ul id="playlist" class="space-y-2"><li class="text-gray-400">Učitavanje pesama...</li></ul></div>
                     <div class="player-controls mt-auto">
                         <div id="now-playing" class="text-center text-lg font-semibold truncate mb-4 h-7">Izaberi pesmu</div>
-                        <div class="timeline-container flex items-center gap-3 text-sm text-gray-400 mb-2">
-                            <span id="current-time">0:00</span>
-                            <input type="range" id="timeline" value="0" step="1">
-                            <span id="total-time">0:00</span>
-                        </div>
-                        <div class="buttons flex justify-center items-center gap-8">
+                        <div class="timeline-container flex items-center gap-3 text-sm text-gray-400 mb-2"><span id="current-time">0:00</span><input type="range" id="timeline" value="0" step="1"><span id="total-time">0:00</span></div>
+                        <div class="buttons flex justify-between items-center gap-4">
                             <button id="prev-btn" class="player-button"><i class="fas fa-backward-step"></i></button>
-                            <button id="play-pause-btn" class="player-button"><i class="fas fa-play"></i></button>
+                            <button id="play-pause-btn" class="player-button text-4xl"><i class="fas fa-play"></i></button>
                             <button id="next-btn" class="player-button"><i class="fas fa-forward-step"></i></button>
+                            <div class="flex items-center gap-2">
+                                <i id="volume-icon" class="fas fa-volume-high text-gray-400"></i>
+                                <input type="range" id="volume-slider" min="0" max="100" value="100">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 
-    <div id="mini-player" class="mini-player fixed top-5 left-5 bg-bg-surface/80 backdrop-blur-md p-3 rounded-lg shadow-2xl z-40 w-64 hidden flex-col gap-1 border border-border-color">
-        <div id="mini-song-info" class="font-bold truncate text-white">...</div>
-        <div id="mini-time-info" class="text-xs text-gray-400">--:-- / --:--</div>
+    <div id="mini-player" class="mini-player fixed top-5 right-5 bg-bg-surface/80 backdrop-blur-md p-4 rounded-lg shadow-2xl z-40 w-72 hidden flex-col gap-2 border border-border-color">
+        <div>
+            <div id="mini-song-info" class="font-bold truncate text-white">...</div>
+            <div id="mini-time-info" class="text-xs text-gray-400">--:-- / --:--</div>
+        </div>
+        <div class="flex justify-between items-center mt-2">
+            <div class="flex items-center gap-4">
+                <button id="mini-prev-btn" class="player-button text-base"><i class="fas fa-backward-step"></i></button>
+                <button id="mini-play-pause-btn" class="player-button text-2xl"><i class="fas fa-play"></i></button>
+                <button id="mini-next-btn" class="player-button text-base"><i class="fas fa-forward-step"></i></button>
+            </div>
+            <button id="mini-volume-btn" class="player-button text-base"><i class="fas fa-volume-high"></i></button>
+        </div>
     </div>
     
-    <button id="toggle-view-btn" class="fixed bottom-5 right-5 main-button rounded-full w-14 h-14 flex items-center justify-center z-40 text-xl">
-        <i class="fas fa-eye"></i>
-    </button>
-    
+    <button id="toggle-view-btn" class="fixed bottom-5 right-5 main-button rounded-full w-14 h-14 flex items-center justify-center z-40 text-xl"><i class="fas fa-compress"></i></button>
     <audio id="audio-player"></audio>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // ==========================================================
-    // TVOJ POSTOJEĆI KOD ZA KOMPRESOR (ne diraj)
+    // DEO ZA KOMPRESOR
     // ==========================================================
     try {
         const preloader = document.getElementById('preloader');
@@ -175,149 +151,74 @@ document.addEventListener('DOMContentLoaded', () => {
             preloader.style.opacity = '0';
             preloader.style.visibility = 'hidden';
             mainContentWrapper.style.opacity = '1';
-        }, 1500); // Smanjio sam na 1.5s da ne čekamo dugo
+            mainContentWrapper.style.transform = 'translateY(0)';
+        }, 1000);
 
-        uploadBtn.addEventListener('click', () => {
-            if (selectedFile) handleUpload(selectedFile);
-            else fileInput.click();
-        });
+        uploadBtn.addEventListener('click', () => { if (selectedFile) handleUpload(selectedFile); else fileInput.click(); });
         fileInput.addEventListener('change', (e) => handleFileSelection(e.target.files[0]));
         resetBtn.addEventListener('click', resetUI);
 
-        function handleFileSelection(file) {
-            if (file) {
-                if (!file.type.startsWith('video/')) { alert("Molimo izaberite video fajl."); return; }
-                selectedFile = file;
-                previewFilename.textContent = file.name;
-                previewFiledetails.textContent = `Veličina: ${formatBytes(file.size)}`;
-                filePreview.classList.remove('hidden');
-                uploadBtnContent.innerHTML = `<i class="fas fa-cogs mr-3"></i>Kompresuj Sada`;
-            }
-        }
-
-        function handleUpload(file) {
-            uploadBtn.disabled = true;
-            uploadBtnContent.innerHTML = `<i class="fas fa-spinner fa-spin mr-3"></i>Šaljem na Cloud...`;
-            
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('target_size', sizeInput.value);
-
-            // Simulacija upload-a, jer nemamo server
-             setTimeout(() => {
-                // Mock response
-                const data = { download_url: '#' }; // Lažni URL
-                downloadLink.href = data.download_url;
-                downloadLink.setAttribute('download', `kompresovan-${file.name}`);
-                uploadBox.classList.add('hidden');
-                downloadBox.classList.remove('hidden');
-            }, 2000);
-
-            /*
-            // KOD ZA PRAVI SERVER
-            fetch('/upload', { method: 'POST', body: formData })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.error || 'Nepoznata greška sa servera.') });
-                }
-                return response.json();
-            })
-            .then(data => {
-                downloadLink.href = data.download_url;
-                uploadBox.classList.add('hidden');
-                downloadBox.classList.remove('hidden');
-            })
-            .catch(error => {
-                console.error('Greška:', error);
-                alert(`Došlo je do greške: ${error.message}`);
-                resetUI();
-            });
-            */
-        }
-
-        function resetUI() {
-            uploadBox.classList.remove('hidden');
-            downloadBox.classList.add('hidden');
-            selectedFile = null;
-            uploadBtnContent.innerHTML = `<i class="fas fa-folder-open mr-3"></i>Izaberi Video...`;
-            uploadBtn.disabled = false;
-            filePreview.classList.add('hidden');
-            fileInput.value = '';
-        }
-
-        function formatBytes(bytes, decimals = 2) {
-            if (!+bytes) return '0 Bytes';
-            const k = 1024; const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-        }
+        function handleFileSelection(file) { if (file) { selectedFile = file; previewFilename.textContent = file.name; previewFiledetails.textContent = `Veličina: ${formatBytes(file.size)}`; filePreview.classList.remove('hidden'); uploadBtnContent.innerHTML = `<i class="fas fa-cogs mr-3"></i>Kompresuj Sada`; } }
+        function handleUpload(file) { uploadBtn.disabled = true; uploadBtnContent.innerHTML = `<i class="fas fa-spinner fa-spin mr-3"></i>Šaljem...`; setTimeout(() => { const data = { download_url: '#' }; downloadLink.href = data.download_url; downloadLink.setAttribute('download', `kompresovan-${file.name}`); uploadBox.classList.add('hidden'); downloadBox.classList.remove('hidden'); }, 2000); }
+        function resetUI() { uploadBox.classList.remove('hidden'); downloadBox.classList.add('hidden'); selectedFile = null; uploadBtnContent.innerHTML = `<i class="fas fa-folder-open mr-3"></i>Izaberi Video...`; uploadBtn.disabled = false; filePreview.classList.add('hidden'); fileInput.value = ''; }
+        function formatBytes(bytes, d=2) { if(!+bytes)return'0 Bytes';const k=1024,i=Math.floor(Math.log(bytes)/Math.log(k));return`${parseFloat((bytes/Math.pow(k,i)).toFixed(d<0?0:d))} ${['Bytes','KB','MB','GB'][i]}`}
     } catch(err) { console.error("Greška u delu za kompresor:", err); }
 
     // ==========================================================
-    // NOVI KOD ZA MUZIČKI PLEJER
+    // DEO ZA MUZIČKI PLEJER
     // ==========================================================
     try {
         // --- KONFIGURACIJA ---
         // !!! PROMENI OVE VREDNOSTI BAJO !!!
         const GITHUB_USER = 'erqf';
         const GITHUB_REPO = 'compress';
-        const MUSIC_FOLDER_PATH = 'pesme'; // Folder gde su MP3 fajlovi
+        const MUSIC_FOLDER_PATH = 'pesme';
         // --- KRAJ KONFIGURACIJE ---
 
         const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${MUSIC_FOLDER_PATH}`;
 
-        // Elementi iz DOM-a za plejer
-        const playlistElement = document.getElementById('playlist');
         const audioPlayer = document.getElementById('audio-player');
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const playPauseIcon = playPauseBtn.querySelector('i');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
+        const playlistElement = document.getElementById('playlist');
         const nowPlaying = document.getElementById('now-playing');
         const timeline = document.getElementById('timeline');
         const currentTimeEl = document.getElementById('current-time');
         const totalTimeEl = document.getElementById('total-time');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeIcon = document.getElementById('volume-icon');
+
         const mainContentContainer = document.getElementById('main-content-container');
-        const miniPlayer = document.getElementById('mini-player');
         const toggleViewBtn = document.getElementById('toggle-view-btn');
         const toggleViewIcon = toggleViewBtn.querySelector('i');
+        const miniPlayer = document.getElementById('mini-player');
         const miniSongInfo = document.getElementById('mini-song-info');
         const miniTimeInfo = document.getElementById('mini-time-info');
+        const miniPrevBtn = document.getElementById('mini-prev-btn');
+        const miniPlayPauseBtn = document.getElementById('mini-play-pause-btn');
+        const miniNextBtn = document.getElementById('mini-next-btn');
+        const miniVolumeBtn = document.getElementById('mini-volume-btn');
 
         let songs = [];
         let currentSongIndex = -1;
         let isPlaying = false;
+        let lastVolume = 1;
 
         async function fetchSongs() {
             try {
                 const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`Greška sa GitHub API: ${response.statusText}`);
+                if (!response.ok) throw new Error(`Greška sa GitHub API. Proveri konfiguraciju.`);
                 const data = await response.json();
-                songs = data.filter(file => file.name.endsWith('.mp3')).map(file => ({
-                    name: file.name.replace('.mp3', '').replace(/_/g, ' '),
-                    url: file.download_url
-                }));
+                songs = data.filter(f => f.name.endsWith('.mp3')).map(f => ({ name: f.name.replace('.mp3', '').replace(/_/g, ' '), url: f.download_url }));
                 renderPlaylist();
-            } catch (error) {
-                playlistElement.innerHTML = `<li class="text-red-400">Greška: ${error.message}</li>`;
-            }
+            } catch (error) { playlistElement.innerHTML = `<li class="text-red-400">${error.message}</li>`; }
         }
 
         function renderPlaylist() {
-            if (songs.length === 0) {
-                playlistElement.innerHTML = `<li class="text-gray-400">Nema pesama u folderu. Proveri konfiguraciju.</li>`;
-                return;
-            }
-            playlistElement.innerHTML = '';
-            songs.forEach((song, index) => {
-                const li = document.createElement('li');
-                li.className = 'p-3 rounded-md cursor-pointer hover:bg-white/10 transition-colors truncate';
-                li.textContent = song.name;
-                li.dataset.index = index;
-                li.addEventListener('click', () => playSong(index));
-                playlistElement.appendChild(li);
-            });
+            if (songs.length === 0) { playlistElement.innerHTML = `<li class="text-gray-400">Nema pesama.</li>`; return; }
+            playlistElement.innerHTML = songs.map((song, index) => `<li data-index="${index}" class="p-3 rounded-md cursor-pointer transition-colors truncate">${song.name}</li>`).join('');
+            playlistElement.querySelectorAll('li').forEach(li => li.addEventListener('click', () => playSong(parseInt(li.dataset.index))));
         }
 
         function playSong(index) {
@@ -325,85 +226,81 @@ document.addEventListener('DOMContentLoaded', () => {
             currentSongIndex = index;
             audioPlayer.src = songs[currentSongIndex].url;
             audioPlayer.play();
-            isPlaying = true;
-            updateUI();
         }
 
-        function updateUI() {
+        function updateUIonPlayState() {
+            const playIcon = 'fa-play', pauseIcon = 'fa-pause';
+            const mainIcon = playPauseBtn.querySelector('i');
+            const miniIcon = miniPlayPauseBtn.querySelector('i');
+            mainIcon.className = `fas ${isPlaying ? pauseIcon : playIcon}`;
+            miniIcon.className = `fas ${isPlaying ? pauseIcon : playIcon}`;
+            miniSongInfo.classList.toggle('playing-title', isPlaying);
+        }
+
+        function updateSongInfo() {
             const song = songs[currentSongIndex];
             nowPlaying.textContent = song.name;
             miniSongInfo.textContent = song.name;
-            playPauseIcon.className = 'fas fa-pause';
-            document.querySelectorAll('#playlist li').forEach(li => {
-                li.classList.remove('active');
-                if (parseInt(li.dataset.index) === currentSongIndex) {
-                    li.classList.add('active');
-                }
-            });
+            document.querySelectorAll('#playlist li').forEach(li => li.classList.toggle('active', parseInt(li.dataset.index) === currentSongIndex));
         }
-
-        function formatPlayerTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-
-        playPauseBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audioPlayer.pause();
-            } else {
-                if (currentSongIndex === -1) playSong(0);
-                else audioPlayer.play();
-            }
-        });
         
-        audioPlayer.addEventListener('play', () => {
-            isPlaying = true;
-            playPauseIcon.className = 'fas fa-pause';
-        });
+        function updateVolumeIcon(volume) {
+            const volIcon = volume === 0 ? 'fa-volume-xmark' : volume < 0.5 ? 'fa-volume-low' : 'fa-volume-high';
+            volumeIcon.className = `fas ${volIcon} text-gray-400`;
+            miniVolumeBtn.querySelector('i').className = `fas ${volIcon}`;
+        }
 
-        audioPlayer.addEventListener('pause', () => {
-            isPlaying = false;
-            playPauseIcon.className = 'fas fa-play';
-        });
+        // --- Event Listeneri ---
+        playPauseBtn.addEventListener('click', () => { isPlaying ? audioPlayer.pause() : (currentSongIndex === -1 ? playSong(0) : audioPlayer.play()); });
+        nextBtn.addEventListener('click', () => { playSong((currentSongIndex + 1) % songs.length); });
+        prevBtn.addEventListener('click', () => { playSong((currentSongIndex - 1 + songs.length) % songs.length); });
+        
+        miniPlayPauseBtn.addEventListener('click', () => playPauseBtn.click());
+        miniNextBtn.addEventListener('click', () => nextBtn.click());
+        miniPrevBtn.addEventListener('click', () => prevBtn.click());
 
-        nextBtn.addEventListener('click', () => {
-            playSong((currentSongIndex + 1) % songs.length);
-        });
-
-        prevBtn.addEventListener('click', () => {
-            playSong((currentSongIndex - 1 + songs.length) % songs.length);
-        });
+        audioPlayer.addEventListener('play', () => { isPlaying = true; updateUIonPlayState(); updateSongInfo(); });
+        audioPlayer.addEventListener('pause', () => { isPlaying = false; updateUIonPlayState(); });
+        audioPlayer.addEventListener('ended', () => nextBtn.click());
 
         audioPlayer.addEventListener('timeupdate', () => {
             const { currentTime, duration } = audioPlayer;
             if (duration) {
                 timeline.value = currentTime;
-                const formattedCurrent = formatPlayerTime(currentTime);
-                const formattedDuration = formatPlayerTime(duration);
-                currentTimeEl.textContent = formattedCurrent;
-                miniTimeInfo.textContent = `${formattedCurrent} / ${formattedDuration}`;
+                const format = t => { const m=Math.floor(t/60), s=Math.floor(t%60); return `${m}:${s<10?'0':''}${s}`; };
+                currentTimeEl.textContent = format(currentTime);
+                totalTimeEl.textContent = format(duration);
+                miniTimeInfo.textContent = `${format(currentTime)} / ${format(duration)}`;
             }
         });
+        audioPlayer.addEventListener('loadedmetadata', () => { timeline.max = audioPlayer.duration; });
+        timeline.addEventListener('input', () => { audioPlayer.currentTime = timeline.value; });
 
-        audioPlayer.addEventListener('loadedmetadata', () => {
-            timeline.max = audioPlayer.duration;
-            totalTimeEl.textContent = formatPlayerTime(audioPlayer.duration);
+        volumeSlider.addEventListener('input', e => {
+            const volume = e.target.value / 100;
+            audioPlayer.volume = volume;
+            updateVolumeIcon(volume);
         });
 
-        timeline.addEventListener('input', () => {
-            audioPlayer.currentTime = timeline.value;
+        miniVolumeBtn.addEventListener('click', () => {
+            if (audioPlayer.volume > 0) {
+                lastVolume = audioPlayer.volume;
+                audioPlayer.volume = 0;
+                volumeSlider.value = 0;
+            } else {
+                audioPlayer.volume = lastVolume;
+                volumeSlider.value = lastVolume * 100;
+            }
+            updateVolumeIcon(audioPlayer.volume);
         });
-
-        audioPlayer.addEventListener('ended', () => nextBtn.click());
 
         toggleViewBtn.addEventListener('click', () => {
-            mainContentContainer.classList.toggle('hidden');
-            miniPlayer.classList.toggle('visible');
-            if (mainContentContainer.classList.contains('hidden')) {
-                toggleViewIcon.className = 'fas fa-eye-slash';
+            const isCompressorView = mainContentContainer.classList.toggle('compressor-view');
+            toggleViewIcon.className = `fas ${isCompressorView ? 'fa-expand' : 'fa-compress'}`;
+            if (isCompressorView && currentSongIndex > -1) {
+                miniPlayer.classList.add('visible');
             } else {
-                toggleViewIcon.className = 'fas fa-eye';
+                miniPlayer.classList.remove('visible');
             }
         });
 
