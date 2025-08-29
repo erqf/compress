@@ -9,9 +9,9 @@ print("--- app.py se pokreće (V11.2 Precision Fix) ---")
 app = Flask(__name__)
 # OBAVEZNO UNESI SVOJE ISPRAVNE PODATKE SA CLOUDINARY DASHBOARD-A OVDE!
 cloudinary.config( 
-  cloud_name = "Tvoj Cloud Name", 
-  api_key = "Tvoj API Key", 
-  api_secret = "Tvoj API Secret" 
+  cloud_name = "drlgdcfvn", 
+  api_key = "972236491864889", 
+  api_secret = "9pJnt6iw8f8BxfXi4WMWajAW-Pc" 
 )
 
 @app.route('/')
