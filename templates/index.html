@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Compressor V11</title>
+    <title>Cloud Compressor V11.1</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,12 +39,42 @@
             box-shadow: 0 0 30px var(--glow); transform: translateY(-3px); filter: brightness(1.1);
         }
         .main-button:disabled { background: #4b5563; color: #9ca3af; box-shadow: none; cursor: not-allowed; }
+        
+        /* NOVI PRELOADER STIL */
+        #preloader { transition: opacity 0.8s ease-in-out, visibility 0.8s; }
+        #app-wrapper { transition: opacity 0.8s ease-in-out; }
+        #preloader h1 {
+            color: #b08cd4;
+            animation: pulse-text 2s infinite alternate;
+        }
+        #preloader h1 span {
+            opacity: 0; animation: loading-dots-new 1.8s infinite;
+        }
+        #preloader h1 span:nth-child(1) { animation-delay: 0.0s; }
+        #preloader h1 span:nth-child(2) { animation-delay: 0.2s; }
+        #preloader h1 span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes loading-dots-new {
+            0%, 20% { opacity: 0; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-5px); }
+            100% { opacity: 0; transform: translateY(0); }
+        }
+        @keyframes pulse-text {
+            from { text-shadow: 0 0 5px var(--glow); }
+            to { text-shadow: 0 0 15px var(--glow); }
+        }
+
         .screen { animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="antialiased p-4">
-    <div id="app-wrapper" class="w-full max-w-2xl">
+
+    <div id="preloader" class="fixed inset-0 bg-bg-dark flex items-center justify-center z-50">
+        <h1 class="text-4xl logo-font">LOADING<span>.</span><span>.</span><span>.</span></h1>
+    </div>
+
+    <div id="app-wrapper" class="w-full max-w-2xl opacity-0">
         <div class="main-card p-8 sm:p-10 rounded-2xl">
             <div id="upload-box" class="screen">
                 <div class="text-center">
@@ -77,6 +107,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     try {
+        const preloader = document.getElementById('preloader');
+        const appWrapper = document.getElementById('app-wrapper');
         const uploadBox = document.getElementById('upload-box');
         const downloadBox = document.getElementById('download-box');
         const uploadBtn = document.getElementById('upload-btn');
@@ -89,6 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const resetBtn = document.getElementById('reset-btn');
         const sizeInput = document.getElementById('size-input');
         let selectedFile = null;
+
+        // Novi preloader tajmer
+        setTimeout(() => {
+            preloader.style.opacity = '0';
+            preloader.style.visibility = 'hidden';
+            appWrapper.style.opacity = '1';
+        }, 3000); // Traje 3 sekunde
 
         uploadBtn.addEventListener('click', () => {
             if (selectedFile) handleUpload(selectedFile);
@@ -104,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 previewFilename.textContent = file.name;
                 previewFiledetails.textContent = `Veličina: ${formatBytes(file.size)}`;
                 filePreview.classList.remove('hidden');
-                uploadBtnContent.innerHTML = `<i class="fas fa-cogs mr-3"></i>Započni Kompresiju`;
+                uploadBtnContent.innerHTML = `<i class="fas fa-cogs mr-3"></i>Kompresuj Sada`;
             }
         }
 
